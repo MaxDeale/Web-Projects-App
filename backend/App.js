@@ -14,24 +14,25 @@ app.use(bodyParser.json());
 // using the public directory to serve static files
 app.use(express.static("public"));
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.send("HOME PAGE");
 });
 
+let projects = JSON.parse((fileSystem.readFileSync("./src/webProjects.json")));
 // show projects
-app.get("/api", function(req, res) {
-  fileSystem.readFile("./src/webProjects.json", function(err, data) {
+app.get("/api", function (req, res) {
+  fileSystem.readFile("./src/webProjects.json", function (err, data) {
     if (err) throw err;
     // reading projects json file from disk and sending via a response
-    let projects = JSON.parse(data);
+    projects = JSON.parse(data);
     res.send(projects);
   });
 });
 
 // add project
-app.post("/api", function(req, res) {
+app.post("/api", function (req, res) {
   // get arrray of json objects from webprojects file and save to variable
-  fileSystem.readFile("./src/webProjects.json", function(err, projects) {
+  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
     if (err) {
       console.error(err);
     } else {
@@ -43,7 +44,7 @@ app.post("/api", function(req, res) {
       currentProjects = JSON.stringify(currentProjects);
       console.log(req.body);
       // write file with the new variable
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function(
+      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
         err
       ) {
         if (err) {
@@ -61,8 +62,8 @@ app.post("/api", function(req, res) {
 });
 
 // delete project
-app.delete("/api/:id", function(req, res) {
-  fileSystem.readFile("./src/webProjects.json", function(err, projects) {
+app.delete("/api/:id", function (req, res) {
+  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
     if (err) {
       console.error(err);
       res.redirect("/api");
@@ -77,7 +78,7 @@ app.delete("/api/:id", function(req, res) {
       currentProjects.splice(currentQuery - 1, 1);
       console.log(currentProjects);
       currentProjects = JSON.stringify(currentProjects);
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function(
+      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
         err
       ) {
         if (err) {
@@ -96,9 +97,9 @@ app.delete("/api/:id", function(req, res) {
 
 // Edit Project
 
-app.put("/api/:id", function(req, res) {
+app.put("/api/:id", function (req, res) {
   // get specific project out via title in params
-  fileSystem.readFile("./src/webProjects.json", function(err, projects) {
+  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
     if (err) {
       console.error(err);
       res.redirect("/api");
@@ -106,8 +107,7 @@ app.put("/api/:id", function(req, res) {
       let currentProjects = JSON.parse(projects);
       const id = req.params.id;
       // change the new project to the request body
-      let newProject = Object.assign(
-        {
+      let newProject = Object.assign({
           id: id
         },
         req.body
@@ -126,7 +126,7 @@ app.put("/api/:id", function(req, res) {
       currentProjects = JSON.stringify(currentProjects);
       console.log(updatedProjects);
       // write new file to json
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function(
+      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
         err
       ) {
         if (err) {
