@@ -77,6 +77,8 @@ class App extends Component {
     });
   }
 
+  // edit project function, takes info from form and and it to state in edit variable
+
   editProject(id, title, description, URL) {
     this.setState({
       editProjectData: {
@@ -89,9 +91,12 @@ class App extends Component {
     });
   }
 
+  // update project function, runs when update button is clicked - makes a put request to proxy api to update project with specific id and new info
+
   updateProject() {
     let { title, description, URL } = this.state.editProjectData;
     axios
+      // adding the selected project id onto the put request URL
       .put("/api/" + this.state.editProjectData.id, {
         title,
         description,
@@ -112,6 +117,7 @@ class App extends Component {
       });
   }
 
+  // delete project function, sends a delete request to api with the selected project id
   deleteProject(id) {
     axios.delete("/api/" + id).then(res => {
       this.componentDidMount();
@@ -121,6 +127,7 @@ class App extends Component {
   render() {
     // saving project from state to array and mapping over them to produce a new table row
     let projects = this.state.projects.map(project => {
+      // returning a new table row for every time a project gets added
       return (
         <tr key={project.id}>
           <td>{project.id}</td>
@@ -157,6 +164,7 @@ class App extends Component {
 
         <div className="mainContainer">
           <Button
+            id="addButton"
             color="primary"
             // binding the toggle modal function to the add new project button
             onClick={this.toggleNewProjectModal.bind(this)}
@@ -297,7 +305,7 @@ class App extends Component {
               </Button>
             </ModalFooter>
           </Modal>
-          <Table bordered hover striped variant="dark">
+          <Table className="projectTable" bordered hover striped variant="dark">
             <thead>
               <tr>
                 <th>#</th>
@@ -305,7 +313,7 @@ class App extends Component {
                 <th>Project Description</th>
                 <th>Project URL</th>
                 <th>Edit Project</th>
-                <th>Delete Project</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>{projects}</tbody>

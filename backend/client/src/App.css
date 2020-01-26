@@ -10,7 +10,7 @@ body {
 
 
 .mainContainer {
-  width: 1000px;
+  width: 1200px;
   display: flex;
   align-self: center;
   justify-self: center;
@@ -25,7 +25,11 @@ body {
 }
 
 i {
-  margin-left: 60px;
+  margin-left: 40px;
+}
+
+th {
+  text-align: center !important;
 }
 
 h4 {
@@ -38,6 +42,12 @@ h4 {
 
 #deleteButton {
   color: red;
+}
+
+#addButton:hover {
+  background-color: var(--third-color);
+  color: var(--primary-color);
+  border: none;
 }
 
 #mainIcon {
@@ -56,9 +66,18 @@ h4 {
   width: 100%;
 }
 
-
 p {
   font-size: 9px;
+}
+
+i {
+  margin-right: 40px;
+  transition: all 1s;
+}
+
+i:hover {
+  cursor: pointer;
+  transform: scale(1.5);
 }
 
 
