@@ -32,29 +32,29 @@ app.get("/api", function (req, res) {
 // add project
 app.post("/api", function (req, res) {
   // get arrray of json objects from webprojects file and save to variable
-  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
+  fileSystem.readFile("./src/webProjects.json", function (err) {
     if (err) {
       console.error(err);
     } else {
-      let currentProjects = JSON.parse(projects);
-      // get json stringify of query and save to variable
-      let currentQuery = req.body;
+      const newId = projects[projects.length - 1].id + 1;
+      const newPost = Object.assign({
+        id: newId
+      }, req.body);
+      console.log(newPost)
       // push new project into json array variable
-      currentProjects.push(currentQuery);
-      currentProjects = JSON.stringify(currentProjects);
+      projects.push(newPost);
+      projects = JSON.stringify(projects);
       console.log(req.body);
       // write file with the new variable
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
+      fileSystem.writeFile("./src/webProjects.json", projects, function (
         err
       ) {
         if (err) {
           console.error(err);
-          res.redirect("/api");
         } else {
+
           res.send("Web Projects Updated Successfully.");
-          res.status(201).json({
-            status: "success"
-          });
+
         }
       });
     }
@@ -63,32 +63,28 @@ app.post("/api", function (req, res) {
 
 // delete project
 app.delete("/api/:id", function (req, res) {
-  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
+  fileSystem.readFile("./src/webProjects.json", function (err) {
     if (err) {
       console.error(err);
       res.redirect("/api");
     } else {
-      // get array of projects
-      let currentProjects = JSON.parse(projects);
+
       // get json stringify of query and save to variable
       let currentQuery = req.params.id;
       currentQuery = Number(currentQuery);
       // console.log(currentProjects)
       // delete specific project
-      currentProjects.splice(currentQuery - 1, 1);
-      console.log(currentProjects);
-      currentProjects = JSON.stringify(currentProjects);
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
+      projects.splice(currentQuery - 1, 1);
+      console.log(projects);
+      projects = JSON.stringify(projects);
+      fileSystem.writeFile("./src/webProjects.json", projects, function (
         err
       ) {
         if (err) {
           console.error(err);
-          res.redirect("/api");
         } else {
           res.send("Web Project Deleted Successfully.");
-          res.status(201).json({
-            status: "success"
-          });
+
         }
       });
     }
@@ -97,24 +93,25 @@ app.delete("/api/:id", function (req, res) {
 
 // Edit Project
 
-app.put("/api/:id", function (req, res) {
+
+app.put("/api/id:", function (req, res) {
   // get specific project out via title in params
-  fileSystem.readFile("./src/webProjects.json", function (err, projects) {
+  fileSystem.readFile("./src/webProjects.json", function (err) {
     if (err) {
       console.error(err);
-      res.redirect("/api");
     } else {
-      let currentProjects = JSON.parse(projects);
-      const id = req.params.id;
+      const id = req.params.id * 1;
       // change the new project to the request body
+      const newId = content[projects.length - 1].id + 1;
+
       let newProject = Object.assign({
-          id: id
+          id: newId
         },
         req.body
       );
       // create new array with the updated project
       let updatedProjects = [];
-      currentProjects.forEach(oldProject => {
+      projects.forEach(oldProject => {
         if (oldProject.id == id) {
           // push changed project back into projects Array
           updatedProjects.push(newProject);
@@ -122,27 +119,21 @@ app.put("/api/:id", function (req, res) {
           updatedProjects.push(oldProject);
         }
       });
-      currentProjects = updatedProjects;
-      currentProjects = JSON.stringify(currentProjects);
+      projects = updatedProjects;
+      projects = JSON.stringify(projects)
       console.log(updatedProjects);
       // write new file to json
-      fileSystem.writeFile("./src/webProjects.json", currentProjects, function (
-        err
-      ) {
+      fileSystem.writeFile("./src/webProjects.json", projects, function (err) {
         if (err) {
-          console.error(err);
-          res.redirect("/api");
+          console.error(err)
         } else {
           res.send("Web Project Updated Successfully.");
-          res.status(201).json({
-            status: "success"
-          });
+
         }
-      });
+      })
     }
   });
 });
-
 // making the server listen in port 8080 using a variable
 const PORT = process.env.PORT || 8080;
 
